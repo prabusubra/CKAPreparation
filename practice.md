@@ -52,4 +52,49 @@ spec:
 Ans:-
 k create deploy auto-1 --image=nginx
 k autoscale deploy auto-1 --cpu-percent=50 --min=2 --max=10
+k get hpa
+
+5. Create a networking policy such that only pods with the label access=granted can talk to it.
+
+    Create a nginx pod and attach this policy to it.
+    Create a busybox pod and attempt to talk to nginx - should be blocked
+    Attach the label to busybox and try again - should be allowed
+    
+    apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:  
+    - podSelector:
+       matchLabels:
+        access: granted
+
+6. Create a namespace
+
+    Run a pod in the new namespace
+    Put memory limits on the namespace
+    Limit pods to 2 persistent volumes in this namespace
+    
+    Ans:-
+    
+    k create namespace alpha
+    k run ng-alpha --image=nginx --namespace=alpha
+    apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: alpha-quota
+    spec:
+      hard:
+        memory: 200Gi
+      persistentvolumeclaims: "2"
+    
+    k create -f rq-1.yaml -n alpha
+    
+
+
 
