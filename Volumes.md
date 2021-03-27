@@ -94,8 +94,21 @@ spec:
 
 output:-
 
+ Inside Pod:-
 ```
 controlplane $ kubectl exec -it p-2 -- cat /usr/temp/prabu/mylog1.log
 Hello Empty dir...
 controlplane $ 
 ```
+ Inside Node:-
+ 
+ ```
+ ls -l /var/lib/kubelet/pods/`kubectl get pod p-2 -o 'jsonpath={.metadata.uid}'`/volumes/kubernetes.io~empty-dir
+ 
+ or 
+ 
+ find /  -type d -iname temp-storage
+ 
+ 
+ ```
+Deleted afer deleting pod.
