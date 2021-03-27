@@ -27,12 +27,12 @@ spec:
     - "-c"
     - "echo 'Prabu Subra...' > /usr/temp/prabu/mylog.txt; sleep 3400;"
     volumeMounts:
-    - mountPath: /usr/temp
+    - mountPath: /usr/temp/prabu
       name: test-volume
   volumes:
   - name: test-volume
     hostPath:
-      path: /usr/temp
+      path: /usr/temp/prabu
 
 ```
 Output:-
