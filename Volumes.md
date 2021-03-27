@@ -35,8 +35,10 @@ spec:
       path: /usr/temp
 
 ```
-
+Output:-
+```
 controlplane $ ssh node01
 node01 $ ls /usr/temp/prabu/
 mylog.txt
-node01 $ 
+
+```
