@@ -13,7 +13,7 @@ Static Binding:-
 
 HostPath:
  creates the folders on the node in which pod is running.
- ---
+ ```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -34,7 +34,7 @@ spec:
     hostPath:
       path: /usr/temp
 
----
+```
 
 controlplane $ ssh node01
 node01 $ ls /usr/temp/prabu/
