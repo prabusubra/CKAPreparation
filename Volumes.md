@@ -107,8 +107,26 @@ controlplane $
  
  or 
  
- find /  -type d -iname temp-storage
+ find /  -type d -iname temp-storage 
+ 
+ or
+ 
+ journalctl -u kubelet | grep -i kubeletrootdir
+ 
+ find /var/lib/kubelet -type d -iname empt-storage
  
  
  ```
-Deleted afer deleting pod.
+- Data are deleted afer deleting/restarting pod.
+- Data in emptyDir pod is automatically synced with host node.
+
+```
+root@controlplane:~# ls /var/lib/kubelet/pods/3b78d8b7-684a-44b5-b5ed-3776b3e284aa/volumes/kubernetes.io~empty-dir/empt-storage
+
+root@controlplane:~# k exec p-3 -- touch /usr/temp/prabu/mylog.log
+
+root@controlplane:~# ls /var/lib/kubelet/pods/3b78d8b7-684a-44b5-b5ed-3776b3e284aa/volumes/kubernetes.io~empty-dir/empt-storage
+mylog.log
+
+
+```
