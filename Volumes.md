@@ -11,6 +11,29 @@ Static Binding:-
      3. binding PVC with PV.
      4. configure PVC with pods.
 
+Without volumes:-
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p-3
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command:
+     - "/bin/sh"
+     - "-c"
+     - "mkdir -p /usr/temp/prabu; echo 'Welcome to Volumes...' > /usr/temp/prabu/mylog1.log; sleep 1200;"
+```
+output:-
+```
+controlplane $ k exec p-3 -- cat /usr/temp/prabu/mylog1.log
+Welcome to Volumes...
+controlplane $ 
+```
+
 HostPath:
  creates the folders on the node in which pod is running.
  ```
