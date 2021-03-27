@@ -42,3 +42,37 @@ node01 $ ls /usr/temp/prabu/
 mylog.txt
 
 ```
+
+EmptyDir:-
+create the volume inside pod.
+
+```
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p-2
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command:
+     - "/bin/sh"
+     - "-c"
+     - "echo 'Hello Empty dir...' > /usr/temp/prabu/mylog1.log; sleep 3400;"
+    volumeMounts:
+    - name: temp-storage
+      mountPath: /usr/temp/prabu
+  volumes:
+  - name: temp-storage
+    emptyDir: {}
+    
+```
+
+output:-
+
+```
+controlplane $ kubectl exec -it p-2 -- cat /usr/temp/prabu/mylog1.log
+Hello Empty dir...
+controlplane $ 
+```
