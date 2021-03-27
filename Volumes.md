@@ -130,3 +130,87 @@ mylog.log
 
 
 ```
+Local Storage:-
+ 1. create Persistent Volume with local path.
+ 2. create Persistent Volume Claim.
+ 3. create Pod with claim.
+
+Creating Persistent Volume:-
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 50Mi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  local:
+    path: /usr/local/prabu
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "localvolume"
+          operator: "In"
+          values:
+          - "yes"
+```
+
+Creating PVC:-
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Mi
+```
+
+create label for node.
+
+```
+
+kubectl label node controlplane localvolume=yes
+
+```
+
+create a pod using pvc claim.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: l-p-2
+spec:
+  containers:
+  - image: busybox
+    name: test-container
+    command:
+    - "/bin/sh"
+    - "-c"
+    - "echo 'Prabu Subra...' > /usr/temp/prabu/mylog.txt; sleep 1000;"
+    volumeMounts:
+    - mountPath: /usr/temp/prabu
+      name: test-volume
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:
+     claimName: claim1
+```
+Check file in node.
+
+```
+root@controlplane:~# cat /usr/local/prabu/mylog.txt 
+Prabu Subra...
+
+```
