@@ -61,3 +61,37 @@ If you don't see a command prompt, try pressing enter.
 Connecting to 10.32.0.2 (10.32.0.2:80)
 wget: download timed out
 ```
+Pod level traffice controll:-
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-pod-ingress
+spec:
+  podSelector:
+   matchLabels:
+    app: front
+  ingress:
+  - from:
+    - podSelector:
+       matchLabels:
+        app: mid
+```
+
+Output:-
+```
+rabusubra@prabus-MacBook-Pro netpol % k run --rm -it --image=alpine --labels=app=mid -- bash
+If you don't see a command prompt, try pressing enter.
+/ # wget --spider -T 1 10.32.0.2:80
+Connecting to 10.32.0.2:80 (10.32.0.2:80)
+remote file exists
+```
+
+```
+prabusubra@prabus-MacBook-Pro netpol % k run --rm -it --image=alpine --labels=app=db -- bash
+If you don't see a command prompt, try pressing enter.
+/ # wget --spider -T 1 10.32.0.2:80
+Connecting to 10.32.0.2:80 (10.32.0.2:80)
+wget: download timed out
+```
