@@ -29,3 +29,35 @@ remote file exists
 / #
 ```
 Namespace level traffice controll:-
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-ingress
+spec:
+  podSelector:
+   matchLabels:
+    app: front
+  ingress:
+  - from:
+    - namespaceSelector:
+       matchLabels:
+        app: beta
+```
+
+```
+prabusubra@prabus-MacBook-Pro netpol % k run --rm -it --image=alpine -n beta -- bash
+If you don't see a command prompt, try pressing enter.
+/ # wget --spider -T 1 10.32.0.2 80
+Connecting to 10.32.0.2 (10.32.0.2:80)
+remote file exists
+```
+
+```
+prabusubra@prabus-MacBook-Pro netpol % k run --rm -it --image=alpine -n gamma -- bash
+If you don't see a command prompt, try pressing enter.
+/ # wget --spider -T 1 10.32.0.2 80
+Connecting to 10.32.0.2 (10.32.0.2:80)
+wget: download timed out
+```
