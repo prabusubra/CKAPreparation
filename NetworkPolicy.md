@@ -95,3 +95,54 @@ If you don't see a command prompt, try pressing enter.
 Connecting to 10.32.0.2:80 (10.32.0.2:80)
 wget: download timed out
 ```
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: port-policy-1
+spec:
+  podSelector:
+    matchLabels:
+      app: front
+  ingress:
+    - from:
+        - podSelector:
+           matchLabels:
+            app: back
+      ports:
+        - port: 80
+       
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: front
+  name: ng-1
+spec:
+  containers:
+  - image: nginx
+    name: ng-1
+    ports:
+    - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ng-1
+  name: ng-1
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: front
+```
+
+```
+k run bb1 -it --rm --image=busybox --labels=app=back -- wget --spider --timeout=2 10.244.0.11:80
+```
