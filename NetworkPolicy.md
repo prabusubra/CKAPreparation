@@ -99,6 +99,22 @@ wget: download timed out
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: port-policy-2
+spec:
+  podSelector:
+    matchLabels:
+      app: front
+  ingress:
+    - from:
+        - podSelector: {}
+      ports:
+        - port: 80
+       
+ ---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: port-policy-1
 spec:
   podSelector:
